@@ -1,0 +1,14 @@
+{
+  "name": "@cooperativa/signaling-worker",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240605.0",
+    "typescript": "^5.4.0",
+    "wrangler": "^3.60.0"
+  }
+}

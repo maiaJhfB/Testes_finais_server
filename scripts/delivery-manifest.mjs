@@ -1,0 +1,22 @@
+import fs from 'node:fs';import path from 'node:path';import {createHash} from 'node:crypto';
+import {root,out} from './tools.mjs';
+const sha=file=>createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+const entry=(absolute,base=root)=>({path:path.relative(base,absolute).replaceAll('\\','/'),bytes:fs.statSync(absolute).size,sha256:sha(absolute)});
+const walk=(directory,skip=new Set())=>fs.readdirSync(directory,{withFileTypes:true}).flatMap(item=>{
+ if(skip.has(item.name))return[];const file=path.join(directory,item.name),stat=fs.lstatSync(file);
+ if(stat.isSymbolicLink())return[];
+ return stat.isDirectory()?walk(file,skip):[file];
+});
+const source='C:/programming/Dev TCC/operacao-correcao-identidade-rotas/2026-10-23/aplicacao';
+const baseline=JSON.parse(fs.readFileSync(path.join(source,'.output/source-manifest.json'),'utf8').replace(/^\uFEFF/,''));
+const verified=baseline.files.map(item=>{const actual=entry(path.join(source,item.path),source);if(actual.sha256!==item.sha256||actual.bytes!==item.bytes)throw new Error('Origin changed: '+item.path);return actual;});
+const files=walk(root,new Set(['node_modules','.git','.output','.expo'])).map(file=>entry(file));
+const omitted=baseline.files.filter(item=>!fs.existsSync(path.join(root,item.path))).map(item=>item.path);
+const changed=files.filter(item=>baseline.files.some(base=>base.path===item.path&&base.sha256!==item.sha256)).map(item=>item.path);
+const added=files.filter(item=>!baseline.files.some(base=>base.path===item.path)).map(item=>item.path);
+const result={atUtc:new Date().toISOString(),root,source,originalVerified:verified.length,originalDivergences:0,files,changed,added,omittedHistoricalOutputs:omitted,dependencyJunction:{path:'node_modules',target:fs.realpathSync(path.join(root,'node_modules')),readOnly:true},sourceShaMethod:'SHA256 current bytes; no retrospective proof of absence of writes'};
+fs.writeFileSync(path.join(out,'source-manifest.json'),JSON.stringify(result,null,2));
+const all=walk(root,new Set(['node_modules','.git'])).filter(file=>path.resolve(file)!==path.join(out,'freeze-manifest.json')).map(file=>entry(file));
+const freeze={atUtc:new Date().toISOString(),root,files:all,count:all.length,bytes:all.reduce((sum,item)=>sum+item.bytes,0),excludes:['node_modules junction','.git','this freeze-manifest.json']};
+fs.writeFileSync(path.join(out,'freeze-manifest.json'),JSON.stringify(freeze,null,2));
+console.log(JSON.stringify({sourceFiles:files.length,changed:changed.length,added:added.length,omitted:omitted.length,originalVerified:verified.length,originalDivergences:0,freezeFiles:all.length,freezeBytes:freeze.bytes,sourceManifestSha256:sha(path.join(out,'source-manifest.json')),freezeManifestSha256:sha(path.join(out,'freeze-manifest.json'))}));

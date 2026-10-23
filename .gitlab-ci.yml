@@ -1,0 +1,53 @@
+workflow:
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "testes"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "testes"'
+    - when: never
+
+stages:
+  - validate
+  - test
+
+default:
+  image: node:20-bookworm
+  interruptible: true
+
+variables:
+  NPM_CONFIG_AUDIT: "false"
+  NPM_CONFIG_FUND: "false"
+
+cache:
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - .npm/
+
+before_script:
+  - npm ci --cache .npm --prefer-offline
+
+architecture:boundaries:
+  stage: validate
+  script:
+    - node scripts/check-architecture.mjs
+
+mobile:typecheck:
+  stage: validate
+  script:
+    - npm run --workspace @cooperativa/mobile typecheck
+
+signaling-worker:typecheck:
+  stage: validate
+  script:
+    - npm exec --workspace @cooperativa/signaling-worker -- tsc --noEmit --target ES2022 --module ESNext --moduleResolution Bundler --types @cloudflare/workers-types --lib ES2022 src/index.ts
+
+mobile:unit:
+  stage: test
+  script:
+    - npm test --workspace @cooperativa/mobile -- --runInBand
+
+contracts:unit:
+  stage: test
+  script:
+    - npm run --workspace @cooperativa/contracts compile
+    - npm test --workspace @cooperativa/contracts

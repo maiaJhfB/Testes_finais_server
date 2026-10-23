@@ -1,0 +1,34 @@
+# Preserve repository exclusions for the EAS upload.
+node_modules/
+.vscode/
+.expo1/
+apps/mobile/.expo1/
+.env
+.expo/
+dist/
+build/
+*.tsbuildinfo
+coverage/
+apps/mobile/jest/
+packages/contracts/artifacts/
+packages/contracts/cache/
+packages/contracts/typechain-types/
+packages/contracts/deployments.json
+packages/signaling-worker/dist/
+.DS_Store
+Thumbs.db
+
+# Private environments, credentials, local caches and build outputs.
+.git/
+.npm/
+.cache/
+.env.*
+!.env.example
+credentials.json
+*.jks
+*.keystore
+*.p12
+*.p8
+*.mobileprovision
+*.apk
+*.aab

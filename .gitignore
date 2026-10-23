@@ -1,0 +1,24 @@
+node_modules/
+.vscode/
+.expo1/
+apps/mobile/.expo1/
+.env
+.expo/
+dist/
+build/
+*.tsbuildinfo
+coverage/
+apps/mobile/jest/
+
+# Contracts
+packages/contracts/artifacts/
+packages/contracts/cache/
+packages/contracts/typechain-types/
+packages/contracts/deployments.json
+
+# Worker
+packages/signaling-worker/dist/
+
+# OS
+.DS_Store
+Thumbs.db

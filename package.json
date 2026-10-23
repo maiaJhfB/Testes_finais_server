@@ -1,0 +1,28 @@
+{
+  "name": "cooperativa-plataforma",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Plataforma mobile descentralizada para cooperativismo — TCC IMT 2025",
+  "workspaces": [
+    "apps/mobile",
+    "packages/contracts",
+    "packages/signaling-worker"
+  ],
+  "scripts": {
+    "mobile": "npm run --workspace @cooperativa/mobile start",
+    "test:mobile": "npm run --workspace @cooperativa/mobile test",
+    "contracts:compile": "npm run --workspace @cooperativa/contracts compile",
+    "contracts:deploy": "npm run --workspace @cooperativa/contracts deploy",
+    "worker:dev": "npm run --workspace @cooperativa/signaling-worker dev",
+    "worker:deploy": "npm run --workspace @cooperativa/signaling-worker deploy"
+  },
+  "devDependencies": {
+    "metro": "^0.80.12",
+    "metro-config": "^0.80.12",
+    "metro-transform-worker": "^0.80.12",
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=20 <23"
+  }
+}

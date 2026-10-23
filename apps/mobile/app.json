@@ -1,0 +1,57 @@
+﻿{
+    "expo":  {
+                 "name":  "Cooperativa",
+                 "slug":  "cooperativa-plataforma",
+                 "owner":  "vitor_maia",
+                 "version":  "0.1.0",
+                 "scheme":  "cooperativa",
+                 "orientation":  "portrait",
+                 "userInterfaceStyle":  "dark",
+                 "splash":  {
+                                "resizeMode":  "contain",
+                                "backgroundColor":  "#0f172a"
+                            },
+                 "plugins":  [
+                                 "expo-router",
+                                 "expo-secure-store",
+                                 "@config-plugins/react-native-webrtc",
+                                 [
+                                     "expo-location",
+                                     {
+                                         "locationAlwaysAndWhenInUsePermission":  "A Cooperativa usa sua localizaÃ§Ã£o para enviar ao motorista/cliente via P2P."
+                                     }
+                                 ]
+                             ],
+                 "android":  {
+                                 "adaptiveIcon":  {
+                                                      "backgroundColor":  "#0f172a"
+                                                  },
+                                 "permissions":  [
+                                                     "CAMERA",
+                                                     "RECORD_AUDIO",
+                                                     "INTERNET",
+                                                     "ACCESS_NETWORK_STATE",
+                                                     "ACCESS_FINE_LOCATION",
+                                                     "ACCESS_COARSE_LOCATION",
+                                                     "VIBRATE"
+                                                 ],
+                                 "package":  "br.com.cooperativa.plataforma"
+                             },
+                 "ios":  {
+                             "bundleIdentifier":  "br.com.cooperativa.plataforma",
+                             "supportsTablet":  false,
+                             "infoPlist":  {
+                                               "NSLocationWhenInUseUsageDescription":  "A Cooperativa usa sua localizaÃ§Ã£o para enviar ao parceiro via P2P.",
+                                               "NSLocationAlwaysUsageDescription":  "A Cooperativa usa sua localizaÃ§Ã£o para enviar ao parceiro via P2P."
+                                           }
+                         },
+                 "extra":  {
+                               "SIGNALING_SERVER_URL": "http://192.168.15.11:8787",
+                               "POLYGON_RPC_URL": "https://rpc-amoy.polygon.technology",
+                               "IDENTITY_CONTRACT_ADDRESS": "",
+                               "eas": {
+                                   "projectId": "9e01b57a-a07d-4b95-adeb-1241cdb331c1"
+                               }
+                           }
+             }
+}
